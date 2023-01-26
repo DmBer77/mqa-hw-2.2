@@ -24,6 +24,7 @@ class ChangeTextTest {
 
     private lateinit var device: UiDevice
     private val textToSet = "Netology"
+    private val textToSetEmpty = ""
 
 //    @Test
 //    fun testInternetSettings() {
@@ -89,26 +90,56 @@ class ChangeTextTest {
         device.wait(Until.hasObject(By.pkg(launcherPackage)), TIMEOUT)
     }
 
-    @Test
-    fun testInternetSettings() {
-        waitForPackage(SETTINGS_PACKAGE)
+//    @Test
+//    fun testInternetSettings() {
+//        waitForPackage(SETTINGS_PACKAGE)
+//
+//        device.findObject(
+//            UiSelector().resourceId("android:id/title").instance(0)
+//        ).click()
+//    }
 
-        device.findObject(
-            UiSelector().resourceId("android:id/title").instance(0)
-        ).click()
+//    @Test
+//    fun testChangeText() {
+//        val packageName = MODEL_PACKAGE
+//        waitForPackage(packageName)
+//
+//        device.findObject(By.res(packageName, "userInput")).text = textToSet
+//        device.findObject(By.res(packageName, "buttonChange")).click()
+//
+//        val result = device.findObject(By.res(packageName, "textToBeChanged")).text
+//        assertEquals(result, textToSet)
+//    }
+
+    @Test
+    fun testChangeTextToEmptyField() {
+        val packageName = MODEL_PACKAGE
+        waitForPackage(packageName)
+
+        val resultBeforeChange = device.findObject(By.res(packageName, "textToBeChanged")).text
+        device.findObject(By.res(packageName, "userInput")).text = textToSetEmpty
+        device.findObject(By.res(packageName, "buttonChange")).click()
+
+        val resultAfterChange = device.findObject(By.res(packageName, "textToBeChanged")).text
+
+        assertEquals(resultBeforeChange, resultAfterChange)
     }
 
     @Test
-    fun testChangeText() {
+    fun testChangeTextToNewActivity() {
         val packageName = MODEL_PACKAGE
         waitForPackage(packageName)
 
         device.findObject(By.res(packageName, "userInput")).text = textToSet
-        device.findObject(By.res(packageName, "buttonChange")).click()
+        device.findObject(By.res(packageName, "buttonActivity")).click()
 
-        val result = device.findObject(By.res(packageName, "textToBeChanged")).text
-        assertEquals(result, textToSet)
+        device.wait(Until.hasObject(By.res(packageName,"text")), 5000)
+
+        val resultOnNewActivity = device.findObject(By.res(packageName, "text")).text
+
+        assertEquals(resultOnNewActivity, textToSet)
     }
+
 
 }
 
